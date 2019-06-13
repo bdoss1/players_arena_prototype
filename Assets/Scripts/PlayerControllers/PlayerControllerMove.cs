@@ -11,6 +11,10 @@ public class PlayerControllerMove : PlayersArena
     // Walk speeds
     private float PlayerWalk = 6f;
     private float PlayerRunAddition = 10f;
+    public bool Running = false;
+
+    // Link to player sight
+    private PlayerSight PlayerEyes;
 
     public Animator PlayerAnimator;
 
@@ -20,6 +24,9 @@ public class PlayerControllerMove : PlayersArena
     private void OnEnable()
     {
         PV = GetComponent<PhotonView>();
+
+        PlayerEyes = transform.Find("PlayerEyes").GetComponent<PlayerSight>();
+
     }
 
     // Start is called before the first frame update
@@ -49,15 +56,27 @@ public class PlayerControllerMove : PlayersArena
         float player_speed = PlayerWalk;
 
         // Add run if running
-        bool running = false;
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        {
+            // If aiming and attempting to run
+            // stop aiming and run
+            if (PlayerEyes.Aiming)
+            {
+                PlayerEyes.Aiming = false;
+            }
+
+            // Toggle run
+            Running = !Running;
+        }
+
+        if (Running)
         {
             player_speed += PlayerRunAddition;
-            running = true;
+            PlayerEyes.Aiming = false;
         }
 
         // Subtract based on weight of weapon
-        if(CurrentBackpack != null)
+        if (CurrentBackpack != null)
         {
             if (CurrentBackpack.CurrentWeapon != null)
             {
@@ -69,14 +88,17 @@ public class PlayerControllerMove : PlayersArena
         float translation = Input.GetAxisRaw("Vertical") * player_speed;
 
         // Cannot run backwards
-        if (translation < 0 && running) player_speed -= PlayerRunAddition;
+        if (translation < 0 && Running) player_speed -= PlayerRunAddition;
+
+        // Stop running if player stops
+        if (translation < 1) Running = false;
 
         float straffe = Input.GetAxisRaw("Horizontal") * player_speed;
         translation *= Time.deltaTime;
         straffe *= Time.deltaTime;
 
         // Update animations
-        if (running)
+        if (Running)
         {
             if (translation > 0)
             {

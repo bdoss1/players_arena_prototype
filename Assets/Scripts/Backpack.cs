@@ -134,12 +134,8 @@ public class Backpack : Pickup
                     // picking up backpack
                     break;
 
+                // Weapons
                 case PickupTypes.Pistol_Heartbreaker:
-
-                    AddOrChangeWeapon(pickup);
-
-                    break;
-
                 case PickupTypes.SMG_Hornet:
 
                     AddOrChangeWeapon(pickup);

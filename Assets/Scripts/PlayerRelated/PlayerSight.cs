@@ -30,16 +30,19 @@ public class PlayerSight : PlayersArena
 
     // Held Weapons
     public GameObject HeldWeapon;
-    private bool Aiming;
+    public bool Aiming;
     private float AimFOV = 60f;
     private float AimZoomVelocity;
     private Vector3 AimingVelocity = Vector3.zero;
     private Dictionary<int, GameObject> HeldWeapons = new Dictionary<int, GameObject>();
 
+    private PlayerControllerMove PlayerMoveController;
+
     private void OnEnable()
     {
         PV = GetComponent<PhotonView>();
         LookController = GetComponent<PlayerControllerLook>();
+        PlayerMoveController = GetComponentInParent<PlayerControllerMove>();
     }
 
     // Start is called before the first frame update
@@ -137,6 +140,14 @@ public class PlayerSight : PlayersArena
 
         // Switch aiming on right click
         if (Input.GetMouseButtonDown(1)) Aiming = !Aiming;
+
+        // Stop running if aiming too
+        if (Aiming && PlayerMoveController.Running)
+        {
+            // Stop running
+            PlayerMoveController.Running = false;
+        }
+
         GetComponent<ArmedObject>().Aiming = Aiming;
 
         // If aiming smooth damp to aim

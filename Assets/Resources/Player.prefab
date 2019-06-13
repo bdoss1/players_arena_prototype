@@ -154,6 +154,7 @@ MonoBehaviour:
   LookController: {fileID: 0}
   ViewingObject: {fileID: 0}
   HeldWeapon: {fileID: 0}
+  Aiming: 0
 --- !u!114 &5564523679888080021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2994,6 +2995,7 @@ MonoBehaviour:
   IsPickup: 0
   IsSupplyBox: 0
   IsWeapon: 0
+  Running: 0
   PlayerAnimator: {fileID: 0}
 --- !u!114 &4363698904281474402
 MonoBehaviour:

@@ -912,7 +912,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aab7f7b6bdddf34c96e7b91849ab521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxPlayers: 2
+  MaxPlayers: 1
   MenuScene: 0
   MultiplayerScene: 1
 --- !u!4 &2046316572
