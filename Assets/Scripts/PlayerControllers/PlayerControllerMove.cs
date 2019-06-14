@@ -13,10 +13,13 @@ public class PlayerControllerMove : PlayersArena
     private float PlayerRunAddition = 10f;
     public bool Running = false;
     public float PlayerRightStraffe = 0f;
+    private float JumpForce = 10f;
+    public bool PlayerIsOnGround = false;
 
     // Link to player sight
     private PlayerSight PlayerEyes;
     public Rigidbody PlayerBody;
+    private CapsuleCollider BodyCollider;
 
     public Animator PlayerAnimator;
 
@@ -29,6 +32,7 @@ public class PlayerControllerMove : PlayersArena
 
         PlayerEyes = transform.Find("PlayerEyes").GetComponent<PlayerSight>();
         PlayerBody = GetComponent<Rigidbody>();
+        BodyCollider = GetComponent<CapsuleCollider>();
 
     }
 
@@ -54,6 +58,8 @@ public class PlayerControllerMove : PlayersArena
     void Update()
     {
         if (!PV.IsMine) return;
+
+        CheckGrounded();
 
         // Start at walk speed
         float player_speed = PlayerWalk;
@@ -145,10 +151,26 @@ public class PlayerControllerMove : PlayersArena
         // Move the player
         transform.Translate(straffe, 0, translation);
 
+        // Jump
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (PlayerIsOnGround)
+            {
+                PlayerBody.AddForce(new Vector3(0, JumpForce, 0));
+            }
+
+        }
+
         if (Input.GetKeyDown("escape"))
         {
             Cursor.lockState = CursorLockMode.None;
         }
 
+    }
+
+    private void CheckGrounded()
+    {
+        // Check if player is on the ground
+        PlayerIsOnGround = true;
     }
 }
