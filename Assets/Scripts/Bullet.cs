@@ -5,12 +5,18 @@ using UnityEngine;
 public class Bullet : PlayersArena
 {
     PhotonView PV;
-    private float Timer = 120;
+    private float DestroyTimer = 30;
+    private TrailRenderer TRenderer;
 
     // Setup and start
     void Awake()
     {
-        PV = GetComponent<PhotonView>();   
+        PV = GetComponent<PhotonView>();
+
+        // Link trail renderer
+        TRenderer = GetComponent<TrailRenderer>();
+        TRenderer.enabled = false;
+
     }
 
     public void Shoot(Weapons weapon, Transform parent, RaycastHit shot_raycast, ArmedObject arms)
@@ -20,6 +26,10 @@ public class Bullet : PlayersArena
         {
             case Weapons.Pistol_HeartBreaker:
                 speed = Pistol_HeartBreaker.BulletSpeed;
+                break;
+
+            case Weapons.SMG_Hornet:
+                speed = SMG_Hornet.BulletSpeed;
                 break;
         }
 
@@ -45,9 +55,16 @@ public class Bullet : PlayersArena
 
     private void Update()
     {
-        if (Timer > 0)
+        // Turn on trail
+        if (!TRenderer.enabled)
         {
-            Timer -= Time.deltaTime;
+            TRenderer.enabled = true;
+        }
+
+        // Destory after long wait
+        if (DestroyTimer > 0)
+        {
+            DestroyTimer -= Time.deltaTime;
         }
         else
         {

@@ -6,7 +6,7 @@ using UnityEngine;
 public class SMG_Hornet : Weapon
 {
     // Speed of bullet
-    public static float BulletSpeed = 500f;
+    public static float BulletSpeed = 500;
 
     // Creation of HeartBreaker
     void Start()

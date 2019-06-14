@@ -227,7 +227,7 @@ public class Weapon : Pickup
         float new_y = transform.rotation.eulerAngles.y + rnd_y;
         Quaternion shoot_angle = Quaternion.Euler(new_x, new_y, transform.rotation.eulerAngles.z);
 
-        // Check in front of player for objects (use for enable/disable trail)
+        // Check in front of player for objects (use for close range shots not being centered)
         RaycastHit raycast_shot_hit;
         Ray ray = eyes.GetComponent<Camera>().ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         Physics.Raycast(ray, out raycast_shot_hit, Mathf.Infinity);
@@ -241,6 +241,10 @@ public class Weapon : Pickup
         {
             case PickupTypes.Pistol_Heartbreaker:
                 weapon_type = Weapons.Pistol_HeartBreaker;
+                break;
+
+            case PickupTypes.SMG_Hornet:
+                weapon_type = Weapons.SMG_Hornet;
                 break;
         }
 

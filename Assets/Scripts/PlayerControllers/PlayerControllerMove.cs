@@ -12,9 +12,11 @@ public class PlayerControllerMove : PlayersArena
     private float PlayerWalk = 6f;
     private float PlayerRunAddition = 10f;
     public bool Running = false;
+    public float PlayerRightStraffe = 0f;
 
     // Link to player sight
     private PlayerSight PlayerEyes;
+    public Rigidbody PlayerBody;
 
     public Animator PlayerAnimator;
 
@@ -26,6 +28,7 @@ public class PlayerControllerMove : PlayersArena
         PV = GetComponent<PhotonView>();
 
         PlayerEyes = transform.Find("PlayerEyes").GetComponent<PlayerSight>();
+        PlayerBody = GetComponent<Rigidbody>();
 
     }
 
