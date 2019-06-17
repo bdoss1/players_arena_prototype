@@ -8,12 +8,21 @@ public class PlayerControllerMove : PlayersArena
     // Network variables
     PhotonView PV;
 
+    // Layer for ground
+    public LayerMask GroundLayer;
+
     // Walk speeds
-    private float PlayerWalk = 6f;
+    private float PlayerWalk = 8f;
     private float PlayerRunAddition = 10f;
     public bool Running = false;
     public float PlayerRightStraffe = 0f;
-    private float JumpForce = 10f;
+
+    // Jump
+    private float JumpSpeed = 0.15f;
+    private const float JumpStopSpeed = 2;
+    private float JumpTimer = 0;
+    private const float JumpTimerMax = 110;
+    private bool Jumping = false;
     public bool PlayerIsOnGround = false;
 
     // Link to player sight
@@ -53,14 +62,52 @@ public class PlayerControllerMove : PlayersArena
     {
         CurrentBackpack = backpack;
     }
-
+    
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (!PV.IsMine) return;
 
-        CheckGrounded();
+        HandleJump();
 
+        HandleMovement();
+
+        if (Input.GetKeyDown("escape"))
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+    }
+
+    void HandleJump()
+    {
+        if (JumpTimer > 0)
+        {
+            JumpSpeed = 0.38f;
+            JumpTimer -= 5;
+            Jumping = true;
+
+            if (JumpSpeed > 0)
+            {
+                JumpSpeed = JumpSpeed / JumpStopSpeed;
+            }
+            else
+            {
+                Jumping = false;
+                JumpTimer = -1;
+            }
+
+        }
+        else
+        {
+            Jumping = false;
+            JumpTimer = -1;
+        }
+    }
+
+    // Update is called once per frame
+    void HandleMovement()
+    {
         // Start at walk speed
         float player_speed = PlayerWalk;
 
@@ -149,16 +196,13 @@ public class PlayerControllerMove : PlayersArena
         }
 
         // Move the player
-        transform.Translate(straffe, 0, translation);
+        float jump_speed = Jumping ? JumpSpeed : 0;
+        transform.Translate(straffe, jump_speed, translation);
 
         // Jump
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (PlayerIsOnGround)
-            {
-                PlayerBody.AddForce(new Vector3(0, JumpForce, 0));
-            }
-
+            if(!Jumping) Jump();
         }
 
         if (Input.GetKeyDown("escape"))
@@ -168,9 +212,8 @@ public class PlayerControllerMove : PlayersArena
 
     }
 
-    private void CheckGrounded()
+    private void Jump()
     {
-        // Check if player is on the ground
-        PlayerIsOnGround = true;
+        JumpTimer = JumpTimerMax;
     }
 }
