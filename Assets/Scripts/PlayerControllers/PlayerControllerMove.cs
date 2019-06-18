@@ -68,8 +68,8 @@ public class PlayerControllerMove : PlayersArena
     {
         if (!PV.IsMine) return;
 
+        CheckGrounded();
         HandleJump();
-
         HandleMovement();
 
         if (Input.GetKeyDown("escape"))
@@ -77,6 +77,11 @@ public class PlayerControllerMove : PlayersArena
             Cursor.lockState = CursorLockMode.None;
         }
 
+    }
+
+    void Update()
+    {
+        HandleRun();
     }
 
     void HandleJump()
@@ -105,25 +110,32 @@ public class PlayerControllerMove : PlayersArena
         }
     }
 
+    void HandleRun()
+    {
+        // Add run if running
+        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        {
+            // If player is on the ground then allow running
+            if (PlayerIsOnGround)
+            {
+                // If aiming and attempting to run
+                // stop aiming and run
+                if (PlayerEyes.Aiming)
+                {
+                    PlayerEyes.Aiming = false;
+                }
+
+                // Toggle run
+                Running = !Running;
+            }
+        }
+    }
+
     // Update is called once per frame
     void HandleMovement()
     {
         // Start at walk speed
         float player_speed = PlayerWalk;
-
-        // Add run if running
-        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
-        {
-            // If aiming and attempting to run
-            // stop aiming and run
-            if (PlayerEyes.Aiming)
-            {
-                PlayerEyes.Aiming = false;
-            }
-
-            // Toggle run
-            Running = !Running;
-        }
 
         if (Running)
         {
@@ -141,7 +153,7 @@ public class PlayerControllerMove : PlayersArena
             }
         }
 
-        float translation = Input.GetAxisRaw("Vertical") * player_speed;
+        float translation = Input.GetAxisRaw("Vertical");
 
         // Cannot run backwards
         if (translation < 0 && Running) player_speed -= PlayerRunAddition;
@@ -150,7 +162,7 @@ public class PlayerControllerMove : PlayersArena
         if (translation < 1) Running = false;
 
         float straffe = Input.GetAxisRaw("Horizontal") * player_speed;
-        translation *= Time.deltaTime;
+        translation *= Time.deltaTime * player_speed;
         straffe *= Time.deltaTime;
 
         // Update animations
@@ -202,7 +214,7 @@ public class PlayerControllerMove : PlayersArena
         // Jump
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if(!Jumping) Jump();
+            if(!Jumping && PlayerIsOnGround) Jump();
         }
 
         if (Input.GetKeyDown("escape"))
@@ -215,5 +227,26 @@ public class PlayerControllerMove : PlayersArena
     private void Jump()
     {
         JumpTimer = JumpTimerMax;
+    }
+
+    private void CheckGrounded()
+    {
+        Vector3 start_pos = transform.position + new Vector3(0, 0.01f, 0);
+        
+        RaycastHit hit;
+        // Does the ray intersect any objects excluding the player layer
+        if (Physics.Raycast(start_pos, -transform.TransformDirection(Vector3.up), out hit, 0.011f, GroundLayer))
+        {
+            //Debug.DrawRay(start_pos, -transform.TransformDirection(Vector3.up) * hit.distance, Color.yellow);
+            PlayerIsOnGround = true;
+        }
+        else
+        {
+            //Debug.DrawRay(start_pos, -transform.TransformDirection(Vector3.up) * 1000, Color.white);
+            PlayerIsOnGround = false;
+        }
+
+        
+
     }
 }
