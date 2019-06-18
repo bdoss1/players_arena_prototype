@@ -12,11 +12,6 @@ public class Bullet : PlayersArena
     void Awake()
     {
         PV = GetComponent<PhotonView>();
-
-        // Link trail renderer
-        TRenderer = GetComponent<TrailRenderer>();
-        TRenderer.enabled = false;
-
     }
 
     public void Shoot(Weapons weapon, Transform parent, RaycastHit shot_raycast, ArmedObject arms)
@@ -55,12 +50,6 @@ public class Bullet : PlayersArena
 
     private void Update()
     {
-        // Turn on trail
-        if (!TRenderer.enabled)
-        {
-            TRenderer.enabled = true;
-        }
-
         // Destory after long wait
         if (DestroyTimer > 0)
         {

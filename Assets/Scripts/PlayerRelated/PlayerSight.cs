@@ -95,6 +95,9 @@ public class PlayerSight : PlayersArena
     {
         if (!PV.IsMine) return;
 
+        // Watch for weapon switch
+        WatchForWeaponSwitch();
+
         // Watch for aiming
         AimIfAiming();
 
@@ -132,6 +135,28 @@ public class PlayerSight : PlayersArena
         // Check weapon shot mode
         HeldWeapon.GetComponent<Weapon>().WatchForShoot(this, PlayerArms);
         
+    }
+
+    void WatchForWeaponSwitch()
+    {
+        // Reload on R key
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CurrentBackpack.SwitchWeapons(WeaponSlots.Primary);
+            ChangeWeapon();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            CurrentBackpack.SwitchWeapons(WeaponSlots.Secondary);
+            ChangeWeapon();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            CurrentBackpack.HolsterWeapons();
+            ChangeWeapon();
+        }
     }
 
     void AimIfAiming()
@@ -280,6 +305,10 @@ public class PlayerSight : PlayersArena
                         {
                             added_to_backpack = true;
                         }
+                    }
+                    else
+                    {
+                        // Hold to swap for new gun
                     }
 
                 }

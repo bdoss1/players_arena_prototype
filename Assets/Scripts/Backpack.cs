@@ -8,8 +8,8 @@ public class Backpack : Pickup
     public List<BackpackItem> BackpackSlots = new List<BackpackItem>();
 
     // Weapon slots
-    public Pickup PrimaryWeapon;
-    public Pickup SecondaryWeapon;
+    public Pickup PrimaryWeapon = null;
+    public Pickup SecondaryWeapon = null;
     public Weapon CurrentWeapon;
     public WeaponSlots EquippedWeapon = WeaponSlots.None;
 
@@ -20,9 +20,7 @@ public class Backpack : Pickup
     // Initializes backpack
     void Start()
     {
-        // Setup weapon equipment
-        PrimaryWeapon = null;
-        SecondaryWeapon = null;
+        
     }
 
     public void LinkArmedObject(ArmedObject armed_object)
@@ -162,45 +160,45 @@ public class Backpack : Pickup
     }
 
     // Adding or changing weapons
-    private void AddOrChangeWeapon(Pickup weapon)
+    private void AddOrChangeWeapon(Pickup weapon, bool swap = false)
     {
-        switch (EquippedWeapon)
+        if (weapon == null) return;
+
+        if (PrimaryWeapon == null)
         {
-            case WeaponSlots.Primary:
+            PrimaryWeapon = weapon;
+            EquippedWeapon = WeaponSlots.Primary;
+            PlayerEyes.ChangeWeapon();
+            print(PrimaryWeapon.name + " added to primary slot1");
+        }
+        else if (SecondaryWeapon == null)
+        {
+            SecondaryWeapon = weapon;
+            EquippedWeapon = WeaponSlots.Secondary;
+            PlayerEyes.ChangeWeapon();
+            print(SecondaryWeapon.name + " added to secondary slot1");
 
-                PrimaryWeapon = weapon;
-                PlayerEyes.ChangeWeapon();
+        }
+        else if(swap)
+        {
+            switch (EquippedWeapon)
+            {
+                case WeaponSlots.Primary:
 
-                break;
-
-            case WeaponSlots.Secondary:
-
-                SecondaryWeapon = weapon;
-                PlayerEyes.ChangeWeapon();
-
-                break;
-
-            case WeaponSlots.None:
-
-                if (PrimaryWeapon == null)
-                {
                     PrimaryWeapon = weapon;
-                    EquippedWeapon = WeaponSlots.Primary;
                     PlayerEyes.ChangeWeapon();
-                }
-                else if(SecondaryWeapon == null)
-                {
+                    print(PrimaryWeapon.name + " added to primary slot2");
+
+                    break;
+
+                case WeaponSlots.Secondary:
+
                     SecondaryWeapon = weapon;
-                    EquippedWeapon = WeaponSlots.Secondary;
                     PlayerEyes.ChangeWeapon();
+                    print(SecondaryWeapon.name + " added to secondary slot2");
 
-                }
-                else
-                {
-                    return;
-                }
-
-                break;
+                    break;
+            }
         }
     }
 
@@ -219,7 +217,15 @@ public class Backpack : Pickup
             if (item.Type == (int)ammo)
             {
                 item.Quantity--;
-                return;
+
+                if(item.Quantity < 1)
+                {
+                    // If ammo pile is empty - clear
+                    // slot in backpack
+                    RemovePickupFromBackpack(item);
+                }
+
+                break;
             }
         }
     }
@@ -241,8 +247,20 @@ public class Backpack : Pickup
     }
 
     // Switches weapons
-    public void SwitchWeapons()
+    public void SwitchWeapons(WeaponSlots slot = WeaponSlots.None)
     {
+        // If switching without toggle
+        switch (slot)
+        {
+            case WeaponSlots.Primary:
+                EquippedWeapon = WeaponSlots.Secondary;
+                break;
+
+            case WeaponSlots.Secondary:
+                EquippedWeapon = WeaponSlots.Primary;
+                break;
+        }
+
         // Determine which weapon is equipped
         switch (EquippedWeapon)
         {

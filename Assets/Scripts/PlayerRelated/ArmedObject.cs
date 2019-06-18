@@ -202,6 +202,10 @@ public class ArmedObject : PlayersArena
                     break;
             }
         }
+        else
+        {
+            print("primary weapon is null");
+        }
 
         // Draw secondary weapon
         if (CurrentBackpack.SecondaryWeapon != null)
