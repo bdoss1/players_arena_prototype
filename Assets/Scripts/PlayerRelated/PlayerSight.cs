@@ -203,7 +203,7 @@ public class PlayerSight : PlayersArena
 
     }
 
-    public void ChangeWeapon()
+    public Pickup ChangeWeapon()
     {
         // Hide old weapon (if needed) and display new weapon
         Pickup held_weapon = null;
@@ -271,6 +271,8 @@ public class PlayerSight : PlayersArena
             Quaternion new_rotation = new Quaternion(0, 0, 0, 0);
             HeldWeapon.transform.localRotation = new_rotation;
         }
+
+        return HeldWeapon.GetComponent<Weapon>();
 
     }
 

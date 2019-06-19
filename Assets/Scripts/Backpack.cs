@@ -168,15 +168,13 @@ public class Backpack : Pickup
         {
             PrimaryWeapon = weapon;
             EquippedWeapon = WeaponSlots.Primary;
-            PlayerEyes.ChangeWeapon();
-            print(PrimaryWeapon.name + " added to primary slot1");
+            PrimaryWeapon = PlayerEyes.ChangeWeapon();
         }
         else if (SecondaryWeapon == null)
         {
             SecondaryWeapon = weapon;
             EquippedWeapon = WeaponSlots.Secondary;
-            PlayerEyes.ChangeWeapon();
-            print(SecondaryWeapon.name + " added to secondary slot1");
+            SecondaryWeapon = PlayerEyes.ChangeWeapon();
 
         }
         else if(swap)
@@ -186,16 +184,14 @@ public class Backpack : Pickup
                 case WeaponSlots.Primary:
 
                     PrimaryWeapon = weapon;
-                    PlayerEyes.ChangeWeapon();
-                    print(PrimaryWeapon.name + " added to primary slot2");
+                    PrimaryWeapon = PlayerEyes.ChangeWeapon();
 
                     break;
 
                 case WeaponSlots.Secondary:
 
                     SecondaryWeapon = weapon;
-                    PlayerEyes.ChangeWeapon();
-                    print(SecondaryWeapon.name + " added to secondary slot2");
+                    SecondaryWeapon = PlayerEyes.ChangeWeapon();
 
                     break;
             }
