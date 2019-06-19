@@ -143,19 +143,19 @@ public class PlayerSight : PlayersArena
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             CurrentBackpack.SwitchWeapons(WeaponSlots.Primary);
-            ChangeWeapon();
+            ChangeWeapon(WeaponSlots.Primary);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             CurrentBackpack.SwitchWeapons(WeaponSlots.Secondary);
-            ChangeWeapon();
+            ChangeWeapon(WeaponSlots.Secondary);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             CurrentBackpack.HolsterWeapons();
-            ChangeWeapon();
+            ChangeWeapon(WeaponSlots.None);
         }
     }
 
@@ -203,7 +203,7 @@ public class PlayerSight : PlayersArena
 
     }
 
-    public Pickup ChangeWeapon()
+    public Pickup ChangeWeapon(WeaponSlots slot)
     {
         // Hide old weapon (if needed) and display new weapon
         Pickup held_weapon = null;
@@ -225,8 +225,13 @@ public class PlayerSight : PlayersArena
         // Remove old weapon
         if(HeldWeapon != null)
         {
-            if (HeldWeapon.scene.IsValid()) Destroy(HeldWeapon);
+            if (HeldWeapon.scene.IsValid()) Destroy(HeldWeapon); // TODO - weapon switching without NULL
             HeldWeapon = null;
+        }
+
+        if (held_weapon == null)
+        {
+            return null;
         }
 
         // Equip new weapon

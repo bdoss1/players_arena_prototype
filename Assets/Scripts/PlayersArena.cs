@@ -47,7 +47,7 @@ public class PlayersArena : MonoBehaviour
         if (BOOTED) return;
         print("Game Started");
         BOOTED = true;
-
+        
         // Light ammo backpack
         CS_BACKPACK_LIGHT_AMMO_STYLE.font = (Font)Resources.Load("Fonts/Lato-Bold");
         CS_BACKPACK_LIGHT_AMMO_STYLE.fontSize = 25;

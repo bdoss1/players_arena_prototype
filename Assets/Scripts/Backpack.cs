@@ -10,6 +10,7 @@ public class Backpack : Pickup
     // Weapon slots
     public Pickup PrimaryWeapon = null;
     public Pickup SecondaryWeapon = null;
+    public WeaponSlots PreviousWeapon = WeaponSlots.None;
     public Weapon CurrentWeapon;
     public WeaponSlots EquippedWeapon = WeaponSlots.None;
 
@@ -164,17 +165,20 @@ public class Backpack : Pickup
     {
         if (weapon == null) return;
 
+        // Keep track of previous weapon
+        PreviousWeapon = EquippedWeapon;
+
         if (PrimaryWeapon == null)
         {
             PrimaryWeapon = weapon;
             EquippedWeapon = WeaponSlots.Primary;
-            PrimaryWeapon = PlayerEyes.ChangeWeapon();
+            PrimaryWeapon = PlayerEyes.ChangeWeapon(WeaponSlots.Primary);
         }
         else if (SecondaryWeapon == null)
         {
             SecondaryWeapon = weapon;
             EquippedWeapon = WeaponSlots.Secondary;
-            SecondaryWeapon = PlayerEyes.ChangeWeapon();
+            SecondaryWeapon = PlayerEyes.ChangeWeapon(WeaponSlots.Secondary);
 
         }
         else if(swap)
@@ -184,14 +188,14 @@ public class Backpack : Pickup
                 case WeaponSlots.Primary:
 
                     PrimaryWeapon = weapon;
-                    PrimaryWeapon = PlayerEyes.ChangeWeapon();
+                    PrimaryWeapon = PlayerEyes.ChangeWeapon(WeaponSlots.Primary);
 
                     break;
 
                 case WeaponSlots.Secondary:
 
                     SecondaryWeapon = weapon;
-                    SecondaryWeapon = PlayerEyes.ChangeWeapon();
+                    SecondaryWeapon = PlayerEyes.ChangeWeapon(WeaponSlots.Secondary);
 
                     break;
             }
@@ -201,7 +205,14 @@ public class Backpack : Pickup
     // Holster all weapons
     public void HolsterWeapons()
     {
-        EquippedWeapon = WeaponSlots.None;
+        if(EquippedWeapon == WeaponSlots.None)
+        {
+            EquippedWeapon = PreviousWeapon;
+        }
+        else
+        {
+            EquippedWeapon = WeaponSlots.None;
+        }
     }
 
     // Pull ammo out of backpack into weapon

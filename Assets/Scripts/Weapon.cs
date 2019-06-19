@@ -12,6 +12,7 @@ public class Weapon : Pickup
     Animator AnimManager;
 
     // Attriubutes
+    public bool Enabled = true; // Start enabled
     public int ClipSize; // No extended mag - clip size
     public int BulletsInClip; // Bullets in weapon
     public int BulletBodyDamage; // Damage on body @ 1m
@@ -202,9 +203,31 @@ public class Weapon : Pickup
         AnimManager = GetComponent<Animator>();
     }
 
+    public void HolsterWeapon()
+    {
+        Enabled = false;
+        UpdateDisplay();
+    }
+
+    public void PullUpWeapon()
+    {
+        Enabled = true;
+        UpdateDisplay();
+    }
+
+    private void UpdateDisplay()
+    {
+        foreach (Transform child in transform)
+        {
+            if (gameObject.GetComponent<Renderer>() != null) gameObject.GetComponent<Renderer>().enabled = Enabled;
+        }
+    }
+
     // Shoot bullet
     public void Shoot(PlayerSight eyes, ArmedObject arms)
     {
+        if (!Enabled) return;
+
         // Create bullet at bullet start position
         BulletsInClip -= 1;
 
