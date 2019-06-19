@@ -13,6 +13,7 @@ public class Weapon : Pickup
 
     // Attriubutes
     public bool Enabled = true; // Start enabled
+    public bool PickedUp = false; // Start out of player hands
     public int ClipSize; // No extended mag - clip size
     public int BulletsInClip; // Bullets in weapon
     public int BulletBodyDamage; // Damage on body @ 1m
@@ -203,23 +204,40 @@ public class Weapon : Pickup
         AnimManager = GetComponent<Animator>();
     }
 
+    public void PickUp()
+    {
+        PickedUp = true;
+    }
+
+    public void Drop()
+    {
+        PickedUp = false;
+    }
+
     public void HolsterWeapon()
     {
         Enabled = false;
-        UpdateDisplay();
+        UpdateDisplay(transform);
     }
 
     public void PullUpWeapon()
     {
         Enabled = true;
-        UpdateDisplay();
+        UpdateDisplay(transform);
     }
 
-    private void UpdateDisplay()
+    private void UpdateDisplay(Transform t)
     {
-        foreach (Transform child in transform)
+        foreach (Transform child in t)
         {
-            if (gameObject.GetComponent<Renderer>() != null) gameObject.GetComponent<Renderer>().enabled = Enabled;
+            // Hide child if possible
+            if (child.GetComponent<MeshRenderer>() != null)
+            {
+                child.GetComponent<MeshRenderer>().enabled = Enabled;
+            }
+
+            // Recursive through grandchildren
+            UpdateDisplay(child);
         }
     }
 

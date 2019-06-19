@@ -207,6 +207,8 @@ MonoBehaviour:
   PickupID: 
   PickupType: 0
   LevelOfPickup: 0
+  PV: {fileID: 0}
+  Enabled: 1
   ClipSize: 0
   BulletsInClip: 0
   BulletBodyDamage: 0

@@ -225,56 +225,73 @@ public class PlayerSight : PlayersArena
         // Remove old weapon
         if(HeldWeapon != null)
         {
-            if (HeldWeapon.scene.IsValid()) Destroy(HeldWeapon); // TODO - weapon switching without NULL
-            HeldWeapon = null;
+            if (HeldWeapon.scene.IsValid()) HeldWeapon.GetComponent<Weapon>().HolsterWeapon();
         }
 
-        if (held_weapon == null)
+        if (CurrentBackpack.EquippedWeapon == WeaponSlots.None)
         {
             return null;
         }
 
-        // Equip new weapon
-        Vector3 create_position;
-        switch (held_weapon.PickupType)
+        // If weapon not picked up yet then need to instantiate 
+        // in player arms else just hide/show
+        if (!held_weapon.GetComponent<Weapon>().PickedUp)
         {
-            case PickupTypes.Pistol_Heartbreaker:
+            // Equip new weapon
+            Vector3 create_position;
+            switch (held_weapon.PickupType)
+            {
+                case PickupTypes.Pistol_Heartbreaker:
 
-                // Positioning for heartbreaker
-                GameObject heartbreaker = (GameObject)Resources.Load("PlayerHeldWeapons/Pistols/Pistol_HeartBreaker");
-                create_position = PlayerEyes.transform.position + transform.forward * 0.4f;
-                create_position = create_position + transform.right * 0.175f;
-                create_position = create_position + transform.up * -0.2f;
+                    // Positioning for heartbreaker
+                    GameObject heartbreaker = (GameObject)Resources.Load("PlayerHeldWeapons/Pistols/Pistol_HeartBreaker");
+                    create_position = PlayerEyes.transform.position + transform.forward * 0.4f;
+                    create_position = create_position + transform.right * 0.175f;
+                    create_position = create_position + transform.up * -0.2f;
 
-                // Create the weapon
-                HeldWeapon = Instantiate(heartbreaker, create_position, Quaternion.identity, transform);
+                    // Create the weapon
+                    HeldWeapon = Instantiate(heartbreaker, create_position, Quaternion.identity, transform);
 
-                // Link backpack so we have access to ammo
-                HeldWeapon.GetComponent<Weapon>().SetBackpack(CurrentBackpack);
-                break;
+                    break;
 
-            case PickupTypes.SMG_Hornet:
+                case PickupTypes.SMG_Hornet:
 
-                // Positioning for heartbreaker
-                GameObject hornet = (GameObject)Resources.Load("PlayerHeldWeapons/SMGs/SMG_Hornet");
-                create_position = PlayerEyes.transform.position + transform.forward * 0.4f;
-                create_position = create_position + transform.right * 0.175f;
-                create_position = create_position + transform.up * -0.2f;
+                    // Positioning for heartbreaker
+                    GameObject hornet = (GameObject)Resources.Load("PlayerHeldWeapons/SMGs/SMG_Hornet");
+                    create_position = PlayerEyes.transform.position + transform.forward * 0.4f;
+                    create_position = create_position + transform.right * 0.175f;
+                    create_position = create_position + transform.up * -0.2f;
 
-                // Create the weapon
-                HeldWeapon = Instantiate(hornet, create_position, Quaternion.identity, transform);
+                    // Create the weapon
+                    HeldWeapon = Instantiate(hornet, create_position, Quaternion.identity, transform);
 
-                // Link backpack so we have access to ammo
-                HeldWeapon.GetComponent<Weapon>().SetBackpack(CurrentBackpack);
-                break;
-        }
+                    break;
+            }
 
-        // Rotate to camera
-        if (HeldWeapon != null)
-        {
+            // Link backpack so we have access to ammo
+            HeldWeapon.GetComponent<Weapon>().SetBackpack(CurrentBackpack);
+
+            // Set flag for picked up weapon - player now controls this weapon
+            HeldWeapon.GetComponent<Weapon>().PickUp();
+
             // Rotate to camera
-            Quaternion new_rotation = new Quaternion(0, 0, 0, 0);
-            HeldWeapon.transform.localRotation = new_rotation;
+            if (HeldWeapon != null)
+            {
+                // Rotate to camera
+                Quaternion new_rotation = new Quaternion(0, 0, 0, 0);
+                HeldWeapon.transform.localRotation = new_rotation;
+            }
+        }
+        else
+        {
+            Weapon weapon = held_weapon.GetComponent<Weapon>();
+
+            if (!weapon.Enabled)
+            {
+                weapon.PullUpWeapon();
+            }
+
+            HeldWeapon = weapon.gameObject;
         }
 
         return HeldWeapon.GetComponent<Weapon>();
