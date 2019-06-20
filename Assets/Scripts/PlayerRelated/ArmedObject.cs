@@ -32,9 +32,11 @@ public class ArmedObject : PlayersArena
     public Texture Backpack_Items_LightAmmo;
 
     // WAD Textures
-    Texture WAD_Background;
-    Texture WAD_HeartBreaker_Primary;
-    Texture WAD_HeartBreaker_Secondary;
+    private Texture WAD_Background;
+    private Texture WAD_HeartBreaker_Primary;
+    private Texture WAD_HeartBreaker_Secondary;
+    private Texture WAD_Hornet_Primary;
+    private Texture WAD_Hornet_Secondary;
 
     // Look controller
     private PlayerControllerLook LookController;
@@ -75,6 +77,8 @@ public class ArmedObject : PlayersArena
         WAD_Background = (Texture)Resources.Load("WAD/WAD_Empty");
         WAD_HeartBreaker_Primary = (Texture)Resources.Load("WAD/WAD_HeartBreaker_Primary");
         WAD_HeartBreaker_Secondary = (Texture)Resources.Load("WAD/WAD_HeartBreaker_Secondary");
+        WAD_Hornet_Primary = (Texture)Resources.Load("WAD/WAD_Hornet_Primary");
+        WAD_Hornet_Secondary = (Texture)Resources.Load("WAD/WAD_Hornet_Secondary");
 
     }
 
@@ -200,6 +204,9 @@ public class ArmedObject : PlayersArena
                 case PickupTypes.Pistol_Heartbreaker:
                     GUI.DrawTexture(new Rect(wad_rect_x, wad_rect_y, wad_rect_width / 2, wad_rect_height), WAD_HeartBreaker_Primary, ScaleMode.ScaleToFit);
                     break;
+                case PickupTypes.SMG_Hornet:
+                    GUI.DrawTexture(new Rect(wad_rect_x, wad_rect_y, wad_rect_width / 2, wad_rect_height), WAD_Hornet_Primary, ScaleMode.ScaleToFit);
+                    break;
             }
         }
 
@@ -210,6 +217,9 @@ public class ArmedObject : PlayersArena
             {
                 case PickupTypes.Pistol_Heartbreaker:
                     GUI.DrawTexture(new Rect(wad_rect_x + (wad_rect_width / 2), wad_rect_y, wad_rect_width / 2, wad_rect_height), WAD_HeartBreaker_Secondary, ScaleMode.ScaleToFit);
+                    break;
+                case PickupTypes.SMG_Hornet:
+                    GUI.DrawTexture(new Rect(wad_rect_x, wad_rect_y, wad_rect_width / 2, wad_rect_height), WAD_Hornet_Secondary, ScaleMode.ScaleToFit);
                     break;
             }
         }
