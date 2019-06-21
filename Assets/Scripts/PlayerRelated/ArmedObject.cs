@@ -32,6 +32,7 @@ public class ArmedObject : PlayersArena
     public Texture Backpack_Items_LightAmmo;
 
     // WAD Textures
+    private const float WAD_SIZE = 0.225f;
     private Texture WAD_Background;
     private Texture WAD_HeartBreaker_Primary;
     private Texture WAD_HeartBreaker_Secondary;
@@ -186,15 +187,16 @@ public class ArmedObject : PlayersArena
 
     private void WeaponAndAmmoDisplay()
     {
-        float wad_rect_x = Screen.width - (Screen.width * 0.23f);
-        float wad_rect_y = Screen.height - (Screen.height * 0.25f);
+        // Scale WAD to size relative to screen: image ratio = 2.85f
+        float wad_rect_width = (Screen.width * WAD_SIZE);
+        float wad_rect_height = wad_rect_width / 2.85f;
 
-        // Size ratio = 200 x 140 px
-        float wad_rect_width = 400 * 0.75f;
-        float wad_rect_height = 280 * 0.75f;
+        // Draw WAD in bottom right coner with light padding
+        float wad_rect_x = Screen.width - wad_rect_width - (wad_rect_width * 0.02f);
+        float wad_rect_y = Screen.height - wad_rect_height;
 
         // Draw background
-        GUI.DrawTexture(new Rect(wad_rect_x,wad_rect_y, wad_rect_width, wad_rect_height), WAD_Background, ScaleMode.ScaleToFit);
+        GUI.DrawTexture(new Rect(wad_rect_x, wad_rect_y, wad_rect_width, wad_rect_height), WAD_Background, ScaleMode.ScaleToFit);
 
         // Draw primary weapon
         if (CurrentBackpack.PrimaryWeapon != null)
